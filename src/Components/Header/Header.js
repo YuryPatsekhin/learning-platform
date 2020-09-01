@@ -6,10 +6,11 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { connect } from "react-redux";
 import { openMenu } from '~/Redux/Actions';
+import "./header.css";
 
 class Header extends React.Component {
 
-  onClick = () => {
+  onMenuButtonClick = () => {
     const { openMenu } = this.props;
 
     openMenu();
@@ -19,10 +20,12 @@ class Header extends React.Component {
     return (
       <AppBar position="static">
         <Toolbar>
-          <IconButton onClick={this.onClick} edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Button color="inherit">Login</Button>
+          <div className="toolbar">
+            <IconButton onClick={this.onMenuButtonClick} edge="start" color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            <Button color="inherit">Login</Button>
+          </div>
         </Toolbar>
       </AppBar>
     );
@@ -31,7 +34,8 @@ class Header extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    openMenu: () => dispatch(openMenu())
+    openMenu: () => dispatch(openMenu()),
+    closeMenu: () => dispatch(closeMenu())
   };
 };
 
