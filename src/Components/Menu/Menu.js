@@ -11,14 +11,11 @@ class Menu extends React.Component {
     return (
       <div className="menu">
         <List>
-          <ListItem button key={'one'}>
-            <ListItemText primary={'one'} />
+          <ListItem button key={'Lessons'}>
+            <ListItemText primary={'Lessons'} />
           </ListItem>
-          <ListItem button key={'two'}>
-            <ListItemText primary={'two'} />
-          </ListItem>
-          <ListItem button key={'three'}>
-            <ListItemText primary={'three'} />
+          <ListItem button key={'Vocabulary'}>
+            <ListItemText primary={'Vocabulary'} />
           </ListItem>
         </List>
       </ div>
