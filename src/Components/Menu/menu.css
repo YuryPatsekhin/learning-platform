@@ -1,13 +1,4 @@
 .menu {
     width: 200px;
-}
-
-.closeIcon {
-    margin: 10px 10px 0 10px;
-    cursor: pointer;
-}
-
-.closeIconWrapper {
-    display: flex;
-    justify-content: flex-end;
+    margin: 64px 0;
 }
