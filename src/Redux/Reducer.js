@@ -1,9 +1,19 @@
 import * as CONSTANTS from "./Constants";
 
-const initialState = {};
+const rootReducer = (state, action) => {
 
-const rootReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case CONSTANTS.OPEN_LOGIN_DIALOG: {
+      return { ...state, isLoginDialogOpen: true }
+    }
 
+    case CONSTANTS.CLOSE_LOGIN_DIALOG: {
+      return { ...state, isLoginDialogOpen: false }
+    }
+
+    default:
+      return state;
+  }
 }
 
 export default rootReducer;
