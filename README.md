@@ -1,1 +1,1 @@
-# learnin-platform
+# learning-platform
