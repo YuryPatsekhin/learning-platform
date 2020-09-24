@@ -2,9 +2,11 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import api from '~/Services/api';
 import { closeLoginDialog } from '~/Redux/Actions'
 import { connect } from "react-redux";
 
@@ -16,6 +18,12 @@ class Login extends React.Component {
     closeLoginDialog();
   }
 
+  handleSubscribe = () => {
+    const data = { login: 'test' };
+
+    api.login(data);
+  }
+
   render() {
     const { isLoginDialogOpen } = this.props;
 
@@ -23,6 +31,9 @@ class Login extends React.Component {
       <Dialog open={isLoginDialogOpen}>
         <DialogTitle>Login</DialogTitle>
         <DialogContent>
+          <DialogContentText>
+            Пожалуйста, авторизуйтесь или пройтиде регистрацию
+          </DialogContentText>
           <TextField id="standard-basic" label="Login" />
           <TextField id="standard-basic" label="Password" />
         </DialogContent>

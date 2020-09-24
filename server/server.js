@@ -1,27 +1,34 @@
-const http = require('http');
+const express = require('express');
+var cors = require('cors')
+const app = express();
 
-const hostname = '127.0.0.1';
-const port = 3000;
+app.use(cors());
 
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/mydb";
-
-MongoClient.connect(url, function (err, db) {
-  if (err) throw err;
-  var dbo = db.db("mydb");
-  dbo.createCollection("customers", function (err, res) {
-    if (err) throw err;
-    console.log("Collection created!");
-    db.close();
-  });
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+app.post('/login', (req, res) => {
+  console.log('test');
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+app.listen(3000);
+
+
+
+
+
+// const MongoClient = require('mongodb').MongoClient;
+// const url = "mongodb://localhost:27017/mydb";
+
+// MongoClient.connect(url, function (err, db) {
+//   if (err) throw err;
+//   const dbo = db.db("mydb");
+
+//   dbo.createCollection("customers", function (err, res) {
+//     if (err) throw err;
+
+//     console.log("Collection created!");
+//     db.close();
+//   });
+// });
