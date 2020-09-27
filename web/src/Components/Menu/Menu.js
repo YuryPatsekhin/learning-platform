@@ -2,43 +2,44 @@ import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-import './menu.css';
 
-class Menu extends React.Component {
-
-  getList = () => {
-    return (
-      <div className="menu">
-        <Divider />
-        <List>
-          <Link to="/lessons">
-            <ListItem button key={'Lessons'}>
-              <ListItemText primary={'Lessons'} />
-            </ListItem>
-          </Link>
-          <Link to="/vocabulary">
-            <ListItem button key={'Vocabulary'}>
-              <ListItemText primary={'Vocabulary'} />
-            </ListItem>
-          </Link>
-        </List>
-      </ div>
-    )
-  };
-
-  render() {
-
-    return (
-      <div className='drawer'>
-        <Drawer anchor="left" variant="permanent">
-          {this.getList()}
-        </Drawer>
-      </div>
-    )
+const styles = {
+  drawerPaper: {
+    marginTop: '64px',
+    color: 'red',
+    width: '200px',
   }
 }
 
-export default Menu
+const Menu = props => {
+  const { classes } = props;
+
+  const getList = () => (
+    <List>
+      <Link to="/lessons">
+        <ListItem button key={'Lessons'}>
+          <ListItemText primary={'Lessons'} />
+        </ListItem>
+      </Link>
+      <Link to="/vocabulary">
+        <ListItem button key={'Vocabulary'}>
+          <ListItemText primary={'Vocabulary'} />
+        </ListItem>
+      </Link>
+    </List>
+  )
+
+  return (
+    <Drawer classes={{paper: classes.drawerPaper}} className={classes.menu} anchor="left" variant="permanent">
+      {getList()}
+    </Drawer>
+  )
+}
+
+
+
+
+export default withStyles(styles)(Menu);

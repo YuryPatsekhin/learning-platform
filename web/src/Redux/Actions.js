@@ -7,3 +7,11 @@ export const openLoginDialog = () => ({
 export const closeLoginDialog = () => ({
   type: CONSTANTS.CLOSE_LOGIN_DIALOG,
 });
+
+export const openRegistrationDialog = () => ({
+  type: CONSTANTS.OPEN_REGISTRATION_DIALOG,
+})
+
+export const closeRegistrationDialog = () => ({
+  type: CONSTANTS.CLOSE_REGISTRATION_DIALOG,
+})

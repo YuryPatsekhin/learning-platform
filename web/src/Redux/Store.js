@@ -3,6 +3,7 @@ import rootReducer from "./Reducer";
 
 const initialState = {
     isLoginDialogOpen: false,
+    isRegistrationDialogOpen: false,
   };
 
 const store = createStore(

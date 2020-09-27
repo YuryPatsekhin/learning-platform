@@ -2,6 +2,7 @@ import React from "react";
 import Body from "./Components/Body";
 import Header from "./Components/Header";
 import Login from "./Components/Login";
+import SignUp from "./Components/SignUp";
 
 export default class App extends React.Component {
   render() {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
         <Header />
         <Body />
         <Login />
+        <SignUp />
       </React.Fragment>
     )
   }

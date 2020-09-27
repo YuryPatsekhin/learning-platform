@@ -7,6 +7,10 @@ const api = {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
+  }),
+  signup: () => fetch(`${APIBaseUrl}/signup`, {
+    method: 'POST',
+    body: JSON.stringify(data),
   })
 }
 

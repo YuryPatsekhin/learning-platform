@@ -11,6 +11,14 @@ const rootReducer = (state, action) => {
       return { ...state, isLoginDialogOpen: false }
     }
 
+    case CONSTANTS.OPEN_REGISTRATION_DIALOG: {
+      return { ...state, isRegistrationDialogOpen: true }
+    }
+
+    case CONSTANTS.CLOSE_REGISTRATION_DIALOG: {
+      return { ...state, isRegistrationDialogOpen: false }
+    }
+
     default:
       return state;
   }

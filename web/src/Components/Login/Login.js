@@ -8,20 +8,20 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import api from '~/Services/api';
-import { closeLoginDialog } from '~/Redux/Actions'
+import { closeLoginDialog, openRegistrationDialog } from '~/Redux/Actions'
 import { connect } from "react-redux";
 
 const styles = {
   contentWrapper: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
   },
   fields: {
     display: 'block',
     marginRight: '20px',
   },
   dialogText: {
+    marginTop: '20px',
     width: '237px',
   },
   buttons: {
@@ -36,7 +36,10 @@ const styles = {
   registerLink: {
     cursor: 'pointer',
     color: '#3f51b5',
-  }
+    '&:hover': {
+      color: '#23bfeb',
+    }
+  },
 };
 
 class Login extends React.Component {
@@ -53,8 +56,11 @@ class Login extends React.Component {
     api.login(data);
   }
 
-  onRegisterClick = () => {
+  onSignUpClick = () => {
+    const { openRegistrationDialog } = this.props;
+
     this.handleCancel();
+    openRegistrationDialog();
   }
 
   render() {
@@ -64,7 +70,7 @@ class Login extends React.Component {
       <Dialog onClose={this.handleCancel} open={isLoginDialogOpen}>
         <DialogTitle className={classes.dialogTitle}>Login</DialogTitle>
         <DialogContent className={classes.contentWrapper}>
-          <DialogContentText className={classes.dialogText}>Please sign in to your account or <span onClick={this.onRegisterClick} className={classes.registerLink}>register</span></DialogContentText>
+          <DialogContentText className={classes.dialogText}>Please sign in to your account or <span onClick={this.onSignUpClick} className={classes.registerLink}>sign up</span></DialogContentText>
           <div className={classes.fieldsWrapper}>
             <TextField className={classes.fields} id="standard-basic" label="Login" />
             <TextField className={classes.fields} id="standard-basic" label="Password" />
@@ -91,6 +97,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    openRegistrationDialog: () => dispatch(openRegistrationDialog()),
     closeLoginDialog: () => dispatch(closeLoginDialog()),
   }
 }
