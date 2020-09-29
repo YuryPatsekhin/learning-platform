@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 const styles = {
   drawerPaper: {
     marginTop: '64px',
-    color: 'red',
     width: '200px',
   }
 }
@@ -17,23 +16,20 @@ const styles = {
 const Menu = props => {
   const { classes } = props;
 
+
   const getList = () => (
     <List>
-      <Link to="/lessons">
-        <ListItem button key={'Lessons'}>
-          <ListItemText primary={'Lessons'} />
-        </ListItem>
-      </Link>
-      <Link to="/vocabulary">
-        <ListItem button key={'Vocabulary'}>
-          <ListItemText primary={'Vocabulary'} />
-        </ListItem>
-      </Link>
+      <ListItem component={Link} to="/lessons" button key={'Lessons'}>
+        <ListItemText primary={'Lessons'} />
+      </ListItem>
+      <ListItem component={Link} to="vocabulary" button key={'Vocabulary'}>
+        <ListItemText primary={'Vocabulary'} />
+      </ListItem>
     </List>
   )
 
   return (
-    <Drawer classes={{paper: classes.drawerPaper}} className={classes.menu} anchor="left" variant="permanent">
+    <Drawer classes={{ paper: classes.drawerPaper }} className={classes.menu} anchor="left" variant="permanent">
       {getList()}
     </Drawer>
   )
