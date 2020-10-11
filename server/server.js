@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  console.log('test');
+  res.send('test');
 });
 
 app.listen(3000);
