@@ -8,7 +8,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.post('api/login', (req, res) => {
+app.post('/login', (req, res) => {
   res.send('test');
 });
 
