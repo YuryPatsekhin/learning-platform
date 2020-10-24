@@ -1,10 +1,18 @@
-version: "2"
+version: "3.8"
 services: 
   server: 
-    build: server/
+    build: 
+      context: server/
     ports: 
       - 3000:3000
+    depends_on:
+      - db
   web:
-    build: web/
-    ports: 
+    build:
+      context: web/
+    ports:   
       - 80:80
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

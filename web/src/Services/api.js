@@ -1,5 +1,4 @@
 const APIBaseUrl = "http://localhost:3000"
-// const APIBaseUrl = "api"
 
 const api = {
   login: (data) => fetch(`${APIBaseUrl}/login`, {
