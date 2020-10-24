@@ -6,7 +6,7 @@ services:
     ports: 
       - 3000:3000
     depends_on:
-      - db
+      - mongo
   web:
     build:
       context: web/
@@ -16,3 +16,7 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+    volumes:
+      - data:/data/db
+volumes:
+  data:
