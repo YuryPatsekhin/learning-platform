@@ -19,6 +19,10 @@ const rootReducer = (state, action) => {
       return { ...state, isRegistrationDialogOpen: false }
     }
 
+    case CONSTANTS.UPDATE_LESSONS: {
+      return { ...state, lessons: action.payload}
+    }
+
     default:
       return state;
   }

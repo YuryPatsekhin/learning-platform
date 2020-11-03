@@ -4,6 +4,7 @@ import rootReducer from "./Reducer";
 const initialState = {
     isLoginDialogOpen: false,
     isRegistrationDialogOpen: false,
+    lessons: [],
   };
 
 const store = createStore(

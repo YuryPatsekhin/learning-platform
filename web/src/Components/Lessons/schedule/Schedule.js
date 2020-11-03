@@ -4,17 +4,30 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import LessonInfo from './LessonInfo';
 import EditLessonInfo from './EditLessonInfo';
+import { useDispatch } from "react-redux";
+import { updateLessons } from '~/Redux/Actions';
 import './styles/schedule.css';
 
-const Schedule = props => {
-  const [events, setEvent] = useState([]);
+const Schedule = () => {
+  const [events, addEvent] = useState([]);
+  const [calendar, setCalendar] = useState(null);
   const [lessonInfoOpen, setLessonInfoOpen] = useState(false);
   const [editLessonInfoOpen, setEditLessonInfoOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedLesson, setSelectedLesson] = useState({});
 
+  const dispatch = useDispatch();
+
+  const updateCalendar = () => {
+    dispatch(updateLessons(events));
+  };
+
   useEffect(() => {
-    setCalendar();
+    if (!calendar) {
+      initCalendar();
+    } else {
+      updateCalendar();
+    };
   });
 
   const eventClick = (info) => {
@@ -23,17 +36,21 @@ const Schedule = props => {
       theme: info.event.title,
       material: info.event.url,
     }
+
     setSelectedLesson(lesson);
     openEditLessonInfo();
   };
 
   const addLesson = (lessonInfo) => {
-    setEvent([...events, {
+    const event = {
       title: lessonInfo.theme,
       url: lessonInfo.material,
       start: selectedDate,
       test: 'test'
-    }]);
+    };
+
+    addEvent([...events, event]);
+    calendar.addEvent(event);
   };
 
   const openLessonInfo = () => {
@@ -57,7 +74,7 @@ const Schedule = props => {
     setLessonInfoOpen(true);
   };
 
-  const setCalendar = () => {
+  const initCalendar = () => {
     const calendarEl = document.getElementById('calendar');
     const calendar = new Calendar(calendarEl, {
       plugins: [interactionPlugin, dayGridPlugin],
@@ -67,6 +84,7 @@ const Schedule = props => {
     });
 
     calendar.render();
+    setCalendar(calendar);
   };
 
   return (

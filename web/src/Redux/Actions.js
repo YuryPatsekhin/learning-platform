@@ -15,3 +15,8 @@ export const openRegistrationDialog = () => ({
 export const closeRegistrationDialog = () => ({
   type: CONSTANTS.CLOSE_REGISTRATION_DIALOG,
 })
+
+export const updateLessons = (lessons) => ({
+  type: CONSTANTS.UPDATE_LESSONS,
+  payload: lessons,
+});
