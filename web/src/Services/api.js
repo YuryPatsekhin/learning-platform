@@ -8,10 +8,18 @@ const api = {
     },
     body: JSON.stringify(data),
   }),
-  signup: () => fetch(`${APIBaseUrl}/signup`, {
+  signup: (data) => fetch(`${APIBaseUrl}/signup`, {
     method: 'POST',
     body: JSON.stringify(data),
-  })
+  }).then(data => data.json()),
+  login: (data) => fetch(`${APIBaseUrl}/login`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then(data => data.json()),
+  validate: (data) => fetch(`${APIBaseUrl}/validate`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then(data => data.json()),
 }
 
 export default api;

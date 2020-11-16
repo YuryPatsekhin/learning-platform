@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from "react-router-dom";
 import Lessons from '../Lessons';
 import Vocabulary from '../Vocabulary';
+import { Classroom } from '../Classroom';
 import './content.css';
 
 export default class Content extends React.Component {
@@ -15,6 +16,9 @@ export default class Content extends React.Component {
           </Route>
           <Route path="/vocabulary">
             <Vocabulary />
+          </Route>
+          <Route path="/classroom">
+            <Classroom />
           </Route>
         </Switch>
       </div>

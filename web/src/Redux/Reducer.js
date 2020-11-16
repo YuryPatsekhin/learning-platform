@@ -23,6 +23,14 @@ const rootReducer = (state, action) => {
       return { ...state, lessons: action.payload}
     }
 
+    case CONSTANTS.SET_USER: {
+      return { ...state, user: action.payload}
+    }
+
+    case CONSTANTS.SET_THEACHER: {
+      return { ...state, theacher: action.payload}
+    }
+
     default:
       return state;
   }

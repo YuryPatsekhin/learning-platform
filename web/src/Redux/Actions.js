@@ -20,3 +20,13 @@ export const updateLessons = (lessons) => ({
   type: CONSTANTS.UPDATE_LESSONS,
   payload: lessons,
 });
+
+export const setUser = (user) => ({
+  type: CONSTANTS.SET_USER,
+  payload: user,
+});
+
+export const setTheacher = (theacher) => ({
+  type: CONSTANTS.SET_THEACHER,
+  payload: theacher,
+});

@@ -2,15 +2,17 @@ import { createStore } from "redux";
 import rootReducer from "./Reducer";
 
 const initialState = {
-    isLoginDialogOpen: false,
-    isRegistrationDialogOpen: false,
-    lessons: [],
-  };
+  isLoginDialogOpen: false,
+  isRegistrationDialogOpen: false,
+  lessons: [],
+  user: null,
+  theacher: ''
+};
 
 const store = createStore(
-    rootReducer,
-    initialState,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  rootReducer,
+  initialState,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 export default store;

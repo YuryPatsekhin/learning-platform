@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import api from '~/Services/api';
-import { closeLoginDialog, openRegistrationDialog } from '~/Redux/Actions'
+import { closeLoginDialog, openRegistrationDialog, setUser } from '~/Redux/Actions'
 import { connect } from "react-redux";
 
 const styles = {
@@ -40,10 +40,19 @@ const styles = {
       color: '#23bfeb',
     }
   },
+  error: {
+    margin: '0px',
+    color: 'red',
+    width: '210px',
+  }
 };
 
 class Login extends React.Component {
 
+  state = {
+    login: '',
+    password: '',
+  }
 
   handleCancel = () => {
     const { closeLoginDialog } = this.props;
@@ -51,21 +60,47 @@ class Login extends React.Component {
     closeLoginDialog();
   }
 
-  handleSubscribe = () => {
-    const data = { login: 'test' };
-
-    api.login(data);
+  onLoginChange = (e) => {
+    this.setState({
+      login: e.target.value,
+    })
   }
 
-  onSignUpClick = () => {
-    const { openRegistrationDialog } = this.props;
+  onPasswordChange = (e) => {
+    this.setState({
+      password: e.target.value,
+    })
+  }
 
-    this.handleCancel();
-    openRegistrationDialog();
+  handleLogin = () => {
+    const { closeLoginDialog, setUser } = this.props;
+    const { login, password } = this.state;
+
+    const form = {
+      login,
+      password
+    }
+
+    api.login(form).then(answer => {
+      if (answer.error) {
+        this.setState({ error: answer.error });
+        return
+      }
+      console.log(1, answer);
+      if (answer.user) {
+        setUser(answer.user);
+        closeLoginDialog();
+        return
+      };
+    }).catch((e) => {
+      this.setState({ error: 'Something went wrong' });
+      console.log(e)
+    });
   }
 
   render() {
     const { isLoginDialogOpen, classes } = this.props;
+    const { error } = this.state;
 
     return (
       <Dialog onClose={this.handleCancel} open={isLoginDialogOpen}>
@@ -73,15 +108,16 @@ class Login extends React.Component {
         <DialogContent className={classes.contentWrapper}>
           <DialogContentText className={classes.dialogText}>Please sign in to your account or <span onClick={this.onSignUpClick} className={classes.registerLink}>sign up</span></DialogContentText>
           <div className={classes.fieldsWrapper}>
-            <TextField className={classes.fields} id="standard-basic" label="Login" />
-            <TextField className={classes.fields} id="standard-basic" label="Password" />
+            <TextField onChange={this.onLoginChange} className={classes.fields} id="standard-basic" label="Login" />
+            <TextField onChange={this.onPasswordChange} className={classes.fields} id="standard-basic" label="Password" />
+            {error ? <DialogContentText className={classes.error}>{error}</DialogContentText> : null}
           </div>
         </DialogContent>
         <DialogActions className={classes.buttons}>
           <Button onClick={this.handleCancel} color="primary">
             Cancel
           </Button>
-          <Button onClick={this.handleSubscribe} color="primary">
+          <Button onClick={this.handleLogin} color="primary">
             Log in
           </Button>
         </DialogActions>
@@ -100,6 +136,7 @@ const mapDispatchToProps = dispatch => {
   return {
     openRegistrationDialog: () => dispatch(openRegistrationDialog()),
     closeLoginDialog: () => dispatch(closeLoginDialog()),
+    setUser: (user) => dispatch(setUser(user)),
   }
 }
 
