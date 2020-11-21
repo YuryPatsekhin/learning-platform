@@ -5,6 +5,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import api from '~/Services/api';
@@ -52,6 +54,7 @@ class Login extends React.Component {
   state = {
     login: '',
     password: '',
+    rememberMe: false,
   }
 
   handleCancel = () => {
@@ -74,11 +77,12 @@ class Login extends React.Component {
 
   handleLogin = () => {
     const { closeLoginDialog, setUser } = this.props;
-    const { login, password } = this.state;
+    const { login, password, rememberMe } = this.state;
 
     const form = {
       login,
-      password
+      password,
+      rememberMe
     }
 
     api.login(form).then(answer => {
@@ -86,7 +90,6 @@ class Login extends React.Component {
         this.setState({ error: answer.error });
         return
       }
-      console.log(1, answer);
       if (answer.user) {
         setUser(answer.user);
         closeLoginDialog();
@@ -98,9 +101,15 @@ class Login extends React.Component {
     });
   }
 
+  rememberMeHandle = (event) => {
+    this.setState({
+      rememberMe: event.target.checked
+    })
+  }
+
   render() {
     const { isLoginDialogOpen, classes } = this.props;
-    const { error } = this.state;
+    const { error, rememberMe } = this.state;
 
     return (
       <Dialog onClose={this.handleCancel} open={isLoginDialogOpen}>
@@ -110,6 +119,17 @@ class Login extends React.Component {
           <div className={classes.fieldsWrapper}>
             <TextField onChange={this.onLoginChange} className={classes.fields} id="standard-basic" label="Login" />
             <TextField onChange={this.onPasswordChange} className={classes.fields} id="standard-basic" label="Password" />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={this.rememberMeHandle}
+                  name="checkedB"
+                  color="primary"
+                />
+              }
+              label="Remember me"
+            />
             {error ? <DialogContentText className={classes.error}>{error}</DialogContentText> : null}
           </div>
         </DialogContent>

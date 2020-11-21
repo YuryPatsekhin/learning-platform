@@ -4,7 +4,9 @@ import Header from "./Components/Header";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import { useDispatch } from "react-redux";
-import { setTheacher } from '~Redux/Actions'
+import { setTheacher, setUser } from '~Redux/Actions';
+import { getCookie } from "~utils/CookieByName";
+import api from '~/Services/api';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -14,6 +16,15 @@ export const App = () => {
     const theacherId = urlParams.get('theacher');
     if (theacherId) {
       dispatch(setTheacher(theacherId))
+    }
+    if (document.cookie.indexOf('session') !== -1) {
+      const token = getCookie('session');
+      api.login({ token }).then(answer => {
+        if (answer.user) {
+          const user = answer.user;
+          dispatch(setUser(user));
+        }
+      });
     }
   })
 

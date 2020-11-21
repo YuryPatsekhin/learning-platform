@@ -2,17 +2,12 @@ const APIBaseUrl = "http://localhost:3000"
 
 const api = {
   login: (data) => fetch(`${APIBaseUrl}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }),
-  signup: (data) => fetch(`${APIBaseUrl}/signup`, {
+    credentials: 'include',
     method: 'POST',
     body: JSON.stringify(data),
   }).then(data => data.json()),
-  login: (data) => fetch(`${APIBaseUrl}/login`, {
+  signup: (data) => fetch(`${APIBaseUrl}/signup`, {
+    credentials: 'include',
     method: 'POST',
     body: JSON.stringify(data),
   }).then(data => data.json()),
@@ -20,6 +15,10 @@ const api = {
     method: 'POST',
     body: JSON.stringify(data),
   }).then(data => data.json()),
+  logout: (data) => fetch(`${APIBaseUrl}/logout`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
 }
 
 export default api;

@@ -29,10 +29,10 @@ const Menu = props => {
         <ListItemText primary={'Vocabulary'} />
       </ListItem>
       {/* {isTeacher ? */}
-        <ListItem component={Link} to="/classroom" button key={'classroom'}>
-          <ListItemText primary={'Classroom'} />
-        </ListItem>
-        {/* :
+      <ListItem component={Link} to="/classroom" button key={'classroom'}>
+        <ListItemText primary={'Classroom'} />
+      </ListItem>
+      {/* :
         null
       } */}
     </List>
