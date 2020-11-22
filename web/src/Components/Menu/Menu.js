@@ -25,9 +25,9 @@ const Menu = props => {
       <ListItem component={Link} to="/lessons" button key={'Lessons'}>
         <ListItemText primary={'Lessons'} />
       </ListItem>
-      <ListItem component={Link} to="/vocabulary" button key={'Vocabulary'}>
+      {/* <ListItem component={Link} to="/vocabulary" button key={'Vocabulary'}>
         <ListItemText primary={'Vocabulary'} />
-      </ListItem>
+      </ListItem> */}
       {/* {isTeacher ? */}
       <ListItem component={Link} to="/classroom" button key={'classroom'}>
         <ListItemText primary={'Classroom'} />

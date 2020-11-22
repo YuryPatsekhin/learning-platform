@@ -23,8 +23,6 @@ export const Schedule = () => {
     return user && user.lessons;
   })
 
-  console.log('lessons', lessons)
-
   useEffect(() => {
     if (currentPupil) {
       if (lessons) {
@@ -110,10 +108,11 @@ export const Schedule = () => {
   };
 
   return (
-    <React.Fragment>
+    currentPupil &&
+    <>
       <EditLessonInfo lesson={selectedLesson} open={editLessonInfoOpen} openLessonInfo={openLessonInfo} closeEditLessonInfo={closeEditLessonInfo} />
       <LessonInfo open={lessonInfoOpen} closeLessonInfo={closeLessonInfo} addLesson={addLesson} />
       <div className='calendar' id='calendar'></div>
-    </React.Fragment>
+    </>
   );
 };
