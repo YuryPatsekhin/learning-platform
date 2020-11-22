@@ -20,15 +20,31 @@ const rootReducer = (state, action) => {
     }
 
     case CONSTANTS.UPDATE_LESSONS: {
-      return { ...state, lessons: action.payload}
+      const { currentPupil, lessons } = action.payload;
+      const user = state.lessons.find(user => user.pupil === action.payload.currentPupil)
+
+      if (user) {
+        user.lessons = lessons
+        return { ...state };
+      } else {
+        const lessonsOfNewPupil = {
+          pupil: currentPupil,
+          lessons,
+        }
+        return { ...state, lessons: [...state.lessons, lessonsOfNewPupil] }
+      }
     }
 
     case CONSTANTS.SET_USER: {
-      return { ...state, user: action.payload}
+      return { ...state, user: action.payload }
     }
 
     case CONSTANTS.SET_THEACHER: {
-      return { ...state, theacher: action.payload}
+      return { ...state, theacher: action.payload }
+    }
+
+    case CONSTANTS.SET_CURRENT_PUPIL: {
+      return { ...state, currentPupil: action.payload }
     }
 
     default:

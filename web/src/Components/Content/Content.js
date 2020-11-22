@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from "react-router-dom";
-import Lessons from '../Lessons';
+import { Lessons } from '../Lessons';
 import Vocabulary from '../Vocabulary';
 import { Classroom } from '../Classroom';
 import './content.css';

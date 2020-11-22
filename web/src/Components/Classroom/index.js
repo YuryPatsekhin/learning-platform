@@ -8,20 +8,21 @@ export const Classroom = () => {
   const teacherHasPupils = user && user.pupils;
 
   return (
-    teacherHasPupils ?
-      <>
-        my link: <a href={invitationLink}>{invitationLink}</a>
-        <br />
-        <br />
+    <>
+      my link: <a href={invitationLink}>{invitationLink}</a>
+      <br />
+      <br />
       myPupils:
-        <br />
+      <br />
+      {teacherHasPupils ?
         <ul>
           {
             user.pupils.map(user => <li>{user.name}</li>)
           }
         </ul>
-      </>
-      :
-      null
+        :
+        null}
+    </>
+
   )
 }

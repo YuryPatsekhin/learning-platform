@@ -1,34 +1,48 @@
 import React, { useState, useEffect } from 'react';
+import { updateLessons } from '~Redux/Actions'
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import LessonInfo from './LessonInfo';
 import EditLessonInfo from './EditLessonInfo';
-import { useDispatch } from "react-redux";
-import { updateLessons } from '~/Redux/Actions';
+import { useDispatch, useSelector } from "react-redux";
+import api from '~/Services/api';
 import './styles/schedule.css';
 
-const Schedule = () => {
-  const [events, addEvent] = useState([]);
+export const Schedule = () => {
   const [calendar, setCalendar] = useState(null);
   const [lessonInfoOpen, setLessonInfoOpen] = useState(false);
   const [editLessonInfoOpen, setEditLessonInfoOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedLesson, setSelectedLesson] = useState({});
-
   const dispatch = useDispatch();
 
-  const updateCalendar = () => {
-    dispatch(updateLessons(events));
-  };
+  const currentPupil = useSelector(state => state.currentPupil);
+  const lessons = useSelector(state => {
+    const user = state.lessons.find(el => el.pupil === currentPupil);
+    return user && user.lessons;
+  })
+
+  console.log('lessons', lessons)
 
   useEffect(() => {
-    if (!calendar) {
-      initCalendar();
-    } else {
-      updateCalendar();
-    };
-  });
+    if (currentPupil) {
+      if (lessons) {
+        initCalendar(lessons);
+      } else {
+        api.getLessons(currentPupil).then(answer => {
+          if (answer && answer.lessons) {
+            const lessons = answer.lessons;
+            dispatch(updateLessons({ currentPupil, lessons }));
+            initCalendar(lessons);
+          } else {
+            initCalendar([])
+          }
+        })
+      }
+    }
+  }, [currentPupil, lessons]);
+
 
   const eventClick = (info) => {
     info.jsEvent.preventDefault();
@@ -48,9 +62,17 @@ const Schedule = () => {
       start: selectedDate,
       test: 'test'
     };
-
-    addEvent([...events, event]);
-    calendar.addEvent(event);
+    const lesson = {
+      event,
+      currentPupil
+    }
+    api.addLesson(lesson).then(answer => {
+      if (answer && answer.lessons) {
+        const lessons = answer.lessons;
+        dispatch(updateLessons({ currentPupil, lessons }));
+        calendar.addEvent(event);
+      }
+    })
   };
 
   const openLessonInfo = () => {
@@ -74,13 +96,13 @@ const Schedule = () => {
     setLessonInfoOpen(true);
   };
 
-  const initCalendar = () => {
+  const initCalendar = (lessons) => {
     const calendarEl = document.getElementById('calendar');
     const calendar = new Calendar(calendarEl, {
       plugins: [interactionPlugin, dayGridPlugin],
       dateClick,
       eventClick,
-      events
+      events: lessons,
     });
 
     calendar.render();
@@ -95,5 +117,3 @@ const Schedule = () => {
     </React.Fragment>
   );
 };
-
-export default Schedule;

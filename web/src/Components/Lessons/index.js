@@ -1,10 +1,13 @@
 import React from 'react';
-import Schedule from './schedule'
-export default class Lessons extends React.Component {
+import { Schedule } from './components/Schedule';
+import { useSelector } from "react-redux";
+import { SelectPupil } from './components/SelectPupil';
 
-  render() {
-    return (
+export const Lessons = () => {
+  return (
+    <>
+      <SelectPupil />
       <Schedule />
-    )
-  }
+    </>
+  )
 }

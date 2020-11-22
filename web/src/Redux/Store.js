@@ -6,7 +6,8 @@ const initialState = {
   isRegistrationDialogOpen: false,
   lessons: [],
   user: null,
-  theacher: ''
+  theacher: '',
+  currentPupil: '',
 };
 
 const store = createStore(

@@ -69,19 +69,22 @@ const addPupilToTheacher = (pupil) => {
 }
 
 const signupHandler = (request, h) => {
-  const obj = JSON.parse(request.payload);
-  console.log('obj', obj);
-
+  const user = JSON.parse(request.payload);
   return new Promise((resolve, reject) => {
     try {
-      db.collection('users').insertOne(obj, (err, response) => {
-        const user = response.ops[0];
-        if (user.theacher) {
-          const teacher = response.ops[0];
-          teacher.pupils = [];
-          addPupilToTheacher(teacher);
+      if (user.role === 'pupil') {
+        user.lessons = [];
+      }
+      db.collection('users').insertOne(user, (err, response) => {
+        if (response.ops.length !== 0) {
+          if (user.role === 'pupil' && user.theacher) {
+            addPupilToTheacher(user);
+          }
+          resolve(h.response(JSON.stringify(response.ops[0])).code(201));
+        } else {
+          const error = Boom.badRequest(e);
+          reject(error);
         }
-        resolve(h.response(user).code(201));
       })
     } catch (e) {
       const error = Boom.badRequest(e);
@@ -152,6 +155,55 @@ const logoutHandler = (request, h) => {
   });
 }
 
+const addLessonHandler = (request, h) => {
+  const data = JSON.parse(request.payload);
+  const user = data.currentPupil;
+  const lesson = data.event;
+
+  return new Promise((resolve, reject) => {
+    try {
+      db.collection('users').updateOne({ _id: ObjectId(user) }, { $push: { lessons: lesson } }).then(obj => {
+        if (obj.modifiedCount === 1) {
+          db.collection('users').find({ _id: ObjectId(user) }).toArray((err, result) => {
+            if (result.length !== 0) {
+              const lessons = result[0].lessons;
+              console.log(lessons)
+              resolve(h.response(JSON.stringify({ lessons })).code(200));
+            }
+          })
+        } else {
+          throw new Error();
+        }
+      });
+    } catch (e) {
+      const error = Boom.badRequest(e);
+      reject(error);
+    }
+  });
+}
+
+
+const getLessonsHandler = (request, h) => {
+  const user = request.params.user;
+
+  return new Promise((resolve, reject) => {
+    try {
+      db.collection('users').find({ _id: ObjectId(user) }).toArray((err, result) => {
+        if (result.length !== 0) {
+          const lessons = result[0].lessons
+          if (lessons) {
+            resolve(h.response(JSON.stringify({ lessons })).code(200));
+          }
+          resolve(h.response(JSON.stringify({ lesson: [] })).code(200));
+        }
+      })
+    } catch (e) {
+      const error = Boom.badRequest(e);
+      reject(error);
+    }
+  });
+}
+
 const init = async () => {
 
   const server = Hapi.server({
@@ -194,6 +246,18 @@ const init = async () => {
     method: 'POST',
     path: '/logout',
     handler: (request, h) => logoutHandler(request, h),
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/addLesson',
+    handler: (request, h) => addLessonHandler(request, h),
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/getLessons/{user}',
+    handler: (request, h) => getLessonsHandler(request, h),
   });
 
   await server.start();
