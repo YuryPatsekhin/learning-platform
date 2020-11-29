@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import Link from '@material-ui/core/Link';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -32,7 +31,11 @@ const EditLessonInfo = props => {
             </TableRow>
             <TableRow>
               <TableCell>Materials: </TableCell>
-              <TableCell align="right">{lesson.material}</TableCell>
+              <TableCell align="right">
+                <Link href={lesson.material}>
+                  Go to lesson!
+              </Link>
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
