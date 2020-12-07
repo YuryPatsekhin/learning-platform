@@ -5,7 +5,7 @@ const randomToken = require('random-token');
 const ObjectId = require('mongodb').ObjectID;
 const MongoClient = require('mongodb').MongoClient;
 
-const url = "mongodb://localhost:27017";
+const url = "mongodb://mongo:27017";
 
 let db;
 
@@ -205,14 +205,14 @@ const getLessonsHandler = (request, h) => {
 }
 
 const init = async () => {
-
+  console.log(111111)
   const server = Hapi.server({
     port: 3000,
-    host: 'localhost',
+    host: '0.0.0.0',
     routes: {
       cors: {
-        origin: ['http://localhost:8080'],
-        credentials: true
+          origin: ['http://localhost:8080'],
+          credentials: true
       },
     },
   });
@@ -259,6 +259,17 @@ const init = async () => {
     path: '/getLessons/{user}',
     handler: (request, h) => getLessonsHandler(request, h),
   });
+
+  server.route({
+    method: 'GET',
+    path: '/test',
+    handler: (request, h) => {
+      return new Promise((res, rej) => {
+        res(h.response("HELLO"))
+      })
+    },
+  });
+
 
   await server.start();
   console.log('Server running on %s', server.info.uri);

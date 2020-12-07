@@ -1,0 +1,22 @@
+correcorversion: "3.8"
+services: 
+  server: 
+    build: 
+      context: server/
+    ports: 
+      - 3000:3000
+    depends_on:
+      - mongo
+  web:
+    build:
+      context: web/
+    ports:   
+      - 8080:80
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data/db
+volumes:
+  data:

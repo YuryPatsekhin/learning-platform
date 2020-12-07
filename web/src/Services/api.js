@@ -1,6 +1,7 @@
 const APIBaseUrl = "http://localhost:3000"
 
 const api = {
+
   login: (data) => fetch(`${APIBaseUrl}/login`, {
     credentials: 'include',
     method: 'POST',
