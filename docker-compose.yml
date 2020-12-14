@@ -3,6 +3,7 @@ services:
   server: 
     build: 
       context: server/
+    image: learningplatform001.azurecr.io/server
     ports: 
       - 3000:3000
     depends_on:
@@ -10,13 +11,14 @@ services:
   web:
     build:
       context: web/
+    image: learningplatform001.azurecr.io/web
     ports:   
-      - 8080:80
+      - 80:80
   mongo:
     image: mongo
     ports:
       - "27017:27017"
-    volumes:
-      - data:/data/db
-volumes:
-  data:
+#     volumes:
+#       - data:/data/db
+# volumes:
+#   data:

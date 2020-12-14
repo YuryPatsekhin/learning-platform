@@ -2,14 +2,15 @@ const Hapi = require('@hapi/hapi');
 const Joi = require('@hapi/joi');
 const Boom = require('@hapi/boom');
 const randomToken = require('random-token');
+const dotenv = require('dotenv');
 const ObjectId = require('mongodb').ObjectID;
 const MongoClient = require('mongodb').MongoClient;
 
-const url = "mongodb://mongo:27017";
+dotenv.config();
 
 let db;
 
-MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
+MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (err, client) => {
   db = client.db('learning-platform');
 });
 
@@ -205,14 +206,13 @@ const getLessonsHandler = (request, h) => {
 }
 
 const init = async () => {
-  console.log(111111)
   const server = Hapi.server({
     port: 3000,
     host: '0.0.0.0',
     routes: {
       cors: {
-          origin: ['http://localhost:8080'],
-          credentials: true
+        origin: ['http://localhost', 'http://localhost:8080'],
+        credentials: true
       },
     },
   });
