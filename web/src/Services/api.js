@@ -1,4 +1,5 @@
-const APIBaseUrl = "http://localhost:3000"
+// const APIBaseUrl = "http://localhost:3000"
+const APIBaseUrl = "https://learning-platform13.herokuapp.com"
 
 const api = {
 
