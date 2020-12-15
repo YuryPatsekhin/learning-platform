@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --mode development --history-api-fallback",
-    "build": "webpack --mode production"
+    "start": "webpack-dev-server --env NODE_ENV=development --mode development --history-api-fallback",
+    "build": "webpack NODE_ENV=production --mode production"
   },
   "repository": {
     "type": "git",

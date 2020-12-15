@@ -8,10 +8,13 @@ const MongoClient = require('mongodb').MongoClient;
 
 dotenv.config();
 
-let db;
+const connectUrl = process.env.NODE_ENV === 'development' ? "mongodb://localhost:27017" : process.env.CONNECTION_URL;
 
-console.log('process.env.CONNECTION_URL', process.env.CONNECTION_URL)
-MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (err, client) => {
+console.log(connectUrl);
+
+MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (err, client) => {
+  let db;
+
   db = client.db('learning-platform');
   const user = Joi.object({
     login: Joi.string().min(3).max(30).required(),
@@ -19,11 +22,11 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
     role: Joi.string().required(),
     theacher: Joi.string().allow(''),
   });
-  
+
   const validateHandler = (request, h) => {
     const obj = JSON.parse(request.payload);
     const { error } = user.validate(obj);
-  
+
     return new Promise((resolve, reject) => {
       try {
         if (error) {
@@ -55,7 +58,7 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       }
     });
   };
-  
+
   const addPupilToTheacher = (pupil) => {
     try {
       const pupilInfo = {
@@ -67,7 +70,7 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       throw new Error(e);
     }
   }
-  
+
   const signupHandler = (request, h) => {
     const user = JSON.parse(request.payload);
     return new Promise((resolve, reject) => {
@@ -92,7 +95,7 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       }
     })
   };
-  
+
   const loginHandler = (request, h) => {
     const obj = JSON.parse(request.payload);
     const user = {
@@ -100,7 +103,7 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       password: obj.password,
     };
     const sessionToken = request.state.session;
-  
+
     return new Promise((resolve, reject) => {
       try {
         if (sessionToken) {
@@ -114,7 +117,7 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
           if (result.length !== 0) {
             if (obj.rememberMe) {
               const token = randomToken(16);
-  
+
               db.collection('users').updateOne(user, { $set: { token: token } }).then(obj => {
                 if (obj.matchedCount > 0) {
                   resolve(h.response(JSON.stringify({ user: result[0] })).state('session', token));
@@ -135,13 +138,13 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       }
     })
   }
-  
+
   const logoutHandler = (request, h) => {
     const user = JSON.parse(request.payload);
     const userId = user._id;
-  
+
     return new Promise((resolve, reject) => {
-  
+
       db.collection('users').updateOne({ _id: ObjectId(userId) }, { $unset: { token: '' } }).then(obj => {
         if (obj.matchedCount > 0) {
           resolve(h.response().state('session', '').code(200));
@@ -154,12 +157,12 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       });
     });
   }
-  
+
   const addLessonHandler = (request, h) => {
     const data = JSON.parse(request.payload);
     const user = data.currentPupil;
     const lesson = data.event;
-  
+
     return new Promise((resolve, reject) => {
       try {
         db.collection('users').updateOne({ _id: ObjectId(user) }, { $push: { lessons: lesson } }).then(obj => {
@@ -181,11 +184,11 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       }
     });
   }
-  
-  
+
+
   const getLessonsHandler = (request, h) => {
     const user = request.params.user;
-  
+
     return new Promise((resolve, reject) => {
       try {
         db.collection('users').find({ _id: ObjectId(user) }).toArray((err, result) => {
@@ -203,62 +206,62 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
       }
     });
   }
-  
+
   const init = async () => {
     const server = Hapi.server({
       port: process.env.PORT || 3000,
       host: '0.0.0.0',
       routes: {
         cors: {
-          origin: ['http://localhost', 'http://localhost:8080'],
+          origin: ['http://localhost', 'http://localhost:8080', 'https://flamboyant-thompson-12766f.netlify.app'],
           credentials: true
         },
       },
     });
-  
+
     server.state('session', {
       ttl: 1000 * 60 * 60 * 24 * 30, // month in milliseconds
       isSecure: false,
       isHttpOnly: false,
       encoding: 'base64json'
     })
-  
+
     server.route({
       method: 'POST',
       path: '/validate',
       handler: (request, h) => validateHandler(request, h),
     });
-  
+
     server.route({
       method: 'POST',
       path: '/login',
       handler: (request, h) => loginHandler(request, h),
     });
-  
+
     server.route({
       method: 'POST',
       path: '/signup',
       handler: (request, h) => signupHandler(request, h),
     });
-  
+
     server.route({
       method: 'POST',
       path: '/logout',
       handler: (request, h) => logoutHandler(request, h),
     });
-  
+
     server.route({
       method: 'POST',
       path: '/addLesson',
       handler: (request, h) => addLessonHandler(request, h),
     });
-  
+
     server.route({
       method: 'GET',
       path: '/getLessons/{user}',
       handler: (request, h) => getLessonsHandler(request, h),
     });
-  
+
     server.route({
       method: 'GET',
       path: '/test',
@@ -268,16 +271,16 @@ MongoClient.connect(process.env.CONNECTION_URL, { useUnifiedTopology: true }, (e
         })
       },
     });
-  
-  
+
+
     await server.start();
     console.log('Server running on %s', server.info.uri);
   };
-  
+
   process.on('unhandledRejection', (err) => {
     console.log(err);
     process.exit(1);
   });
-  
+
   init();
 });

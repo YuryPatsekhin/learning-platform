@@ -10,8 +10,8 @@ import api from '~/Services/api';
 
 export const App = () => {
   const dispatch = useDispatch();
-
   useEffect(() => {
+    // dispatch(setAppConfig(appConfig));
     const urlParams = new URLSearchParams(window.location.search);
     const theacherId = urlParams.get('theacher');
     if (theacherId) {
