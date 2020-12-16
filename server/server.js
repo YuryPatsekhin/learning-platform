@@ -5,14 +5,13 @@ const randomToken = require('random-token');
 const dotenv = require('dotenv');
 const ObjectId = require('mongodb').ObjectID;
 const MongoClient = require('mongodb').MongoClient;
+const { isSameSiteNoneCompatible } = require('should-send-same-site-none');
 
 dotenv.config();
 
 const connectUrl = process.env.NODE_ENV === 'development' ? "mongodb://localhost:27017" : process.env.CONNECTION_URL;
 
-console.log(connectUrl);
-
-MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (err, client) => {
+MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
   let db;
 
   db = client.db('learning-platform');
@@ -96,13 +95,9 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
     })
   };
 
-  const loginHandler = (request, h) => {
-    const obj = JSON.parse(request.payload);
-    const user = {
-      login: obj.login,
-      password: obj.password,
-    };
+  const resumeSessionHandler = (request, h) => {
     const sessionToken = request.state.session;
+    console.log('sessionToken', sessionToken)
 
     return new Promise((resolve, reject) => {
       try {
@@ -112,7 +107,27 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
               resolve(h.response(JSON.stringify({ user: result[0] })).code(200));
             }
           })
+        } else {
+          const error = 'user not found';
+          resolve(h.response(JSON.stringify({ error })
+          ).code(200));
         }
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        reject(error);
+      }
+    })
+  };
+
+  const loginHandler = (request, h) => {
+    const obj = JSON.parse(request.payload);
+    const user = {
+      login: obj.login,
+      password: obj.password,
+    };
+
+    return new Promise((resolve, reject) => {
+      try {
         db.collection('users').find(user).toArray((err, result) => {
           if (result.length !== 0) {
             if (obj.rememberMe) {
@@ -120,7 +135,7 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
 
               db.collection('users').updateOne(user, { $set: { token: token } }).then(obj => {
                 if (obj.matchedCount > 0) {
-                  resolve(h.response(JSON.stringify({ user: result[0] })).state('session', token));
+                  resolve(h.response(JSON.stringify({ user: { ...result[0], token } })));
                 }
               });
             } else {
@@ -170,7 +185,6 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
             db.collection('users').find({ _id: ObjectId(user) }).toArray((err, result) => {
               if (result.length !== 0) {
                 const lessons = result[0].lessons;
-                console.log(lessons)
                 resolve(h.response(JSON.stringify({ lessons })).code(200));
               }
             })
@@ -213,7 +227,7 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
       host: '0.0.0.0',
       routes: {
         cors: {
-          origin: ['http://localhost', 'http://localhost:8080', 'https://flamboyant-thompson-12766f.netlify.app'],
+          origin: ['http://localhost', 'http://localhost:8080', 'https://learning-platform13.netlify.app'],
           credentials: true
         },
       },
@@ -223,7 +237,14 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
       ttl: 1000 * 60 * 60 * 24 * 30, // month in milliseconds
       isSecure: false,
       isHttpOnly: false,
-      encoding: 'base64json'
+      contextualize: async (definition, request) => {
+        const userAgent = request.headers['user-agent'] || false;
+        if (userAgent && isSameSiteNoneCompatible(userAgent)) {
+          definition.isSecure = true;
+          definition.isSameSite = 'None';
+        }
+        request.response.vary('User-Agent');
+      },
     })
 
     server.route({
@@ -261,6 +282,12 @@ MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true }, (
       path: '/getLessons/{user}',
       handler: (request, h) => getLessonsHandler(request, h),
     });
+
+    server.route({
+      method: 'GET',
+      path: '/resumeSession',
+      handler: (request, h) => resumeSessionHandler(request, h),
+    })
 
     server.route({
       method: 'GET',

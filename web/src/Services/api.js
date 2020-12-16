@@ -1,11 +1,14 @@
 import { ENV } from '~constants';
 
-
 const APIBaseUrl = process.env.NODE_ENV === ENV.DEV
   ? "http://localhost:3000"
   : "https://learning-platform13.herokuapp.com";
 
 const api = {
+  resumeSession: (token) => fetch(`${APIBaseUrl}/resumeSession`, {
+    credentials: 'include',
+    method: 'GET',
+  }).then(data => data.json()),
   login: (data) => fetch(`${APIBaseUrl}/login`, {
     credentials: 'include',
     method: 'POST',

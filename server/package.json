@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "mongodb": "^3.6.2",
-    "random-token": "0.0.8"
+    "random-token": "0.0.8",
+    "should-send-same-site-none": "^2.0.5"
   }
 }

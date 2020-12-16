@@ -11,7 +11,6 @@ import api from '~/Services/api';
 export const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    // dispatch(setAppConfig(appConfig));
     const urlParams = new URLSearchParams(window.location.search);
     const theacherId = urlParams.get('theacher');
     if (theacherId) {
@@ -19,7 +18,8 @@ export const App = () => {
     }
     if (document.cookie.indexOf('session') !== -1) {
       const token = getCookie('session');
-      api.login({ token }).then(answer => {
+
+      api.resumeSession(token).then(answer => {
         if (answer.user) {
           const user = answer.user;
           dispatch(setUser(user));

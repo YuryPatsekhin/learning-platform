@@ -10,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import api from '~/Services/api';
+import { setCookie } from "~utils/setCookie";
 import { closeLoginDialog, openRegistrationDialog, setUser } from '~/Redux/Actions'
 import { connect } from "react-redux";
 
@@ -91,6 +92,10 @@ class Login extends React.Component {
         return
       }
       if (answer.user) {
+        const user = answer.user;
+        if (user.token) {
+          setCookie('session', user.token);
+        }
         setUser(answer.user);
         closeLoginDialog();
         return
