@@ -94,7 +94,7 @@ class Login extends React.Component {
       if (answer.user) {
         const user = answer.user;
         if (user.token) {
-          setCookie('session', user.token);
+          setCookie('session', user.token, 30);
         }
         setUser(answer.user);
         closeLoginDialog();

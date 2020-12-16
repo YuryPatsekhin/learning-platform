@@ -5,8 +5,7 @@ const APIBaseUrl = process.env.NODE_ENV === ENV.DEV
   : "https://learning-platform13.herokuapp.com";
 
 const api = {
-  resumeSession: (token) => fetch(`${APIBaseUrl}/resumeSession`, {
-    credentials: 'include',
+  resumeSession: (token) => fetch(`${APIBaseUrl}/resumeSession/${token}`, {
     method: 'GET',
   }).then(data => data.json()),
   login: (data) => fetch(`${APIBaseUrl}/login`, {

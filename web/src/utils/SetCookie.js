@@ -1,7 +1,9 @@
-export const setCookie = (name, value) => {
-  if (name && value) {
-    document.cookie = `${name}=${value}`;
-  } else {
-    console.error('attempt to set cookie use without both parametrs');
+export const setCookie = (name, value, days) => {
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    var expires = "; expires=" + date.toGMTString();
   }
+  else var expires = "";
+  document.cookie = name + "=" + value + expires + "; path=/";
 }

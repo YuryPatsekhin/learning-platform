@@ -96,8 +96,8 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
   };
 
   const resumeSessionHandler = (request, h) => {
-    const sessionToken = request.state.session;
-    console.log('sessionToken', sessionToken)
+    const sessionToken = request.params.token;
+    console.log('sessionToken1', sessionToken)
 
     return new Promise((resolve, reject) => {
       try {
@@ -159,13 +159,8 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
     const userId = user._id;
 
     return new Promise((resolve, reject) => {
-
       db.collection('users').updateOne({ _id: ObjectId(userId) }, { $unset: { token: '' } }).then(obj => {
-        if (obj.matchedCount > 0) {
-          resolve(h.response().state('session', '').code(200));
-        } else {
-          resolve(h.response().code(200))
-        }
+        resolve(h.response().code(200))
       }).catch(e => {
         const error = Boom.badRequest(e);
         reject(error);
@@ -222,6 +217,7 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
   }
 
   const init = async () => {
+    console.log('Версия 3')
     const server = Hapi.server({
       port: process.env.PORT || 3000,
       host: '0.0.0.0',
@@ -232,20 +228,6 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
         },
       },
     });
-
-    server.state('session', {
-      ttl: 1000 * 60 * 60 * 24 * 30, // month in milliseconds
-      isSecure: false,
-      isHttpOnly: false,
-      contextualize: async (definition, request) => {
-        const userAgent = request.headers['user-agent'] || false;
-        if (userAgent && isSameSiteNoneCompatible(userAgent)) {
-          definition.isSecure = true;
-          definition.isSameSite = 'None';
-        }
-        request.response.vary('User-Agent');
-      },
-    })
 
     server.route({
       method: 'POST',
@@ -285,7 +267,7 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
 
     server.route({
       method: 'GET',
-      path: '/resumeSession',
+      path: '/resumeSession/{token}',
       handler: (request, h) => resumeSessionHandler(request, h),
     })
 
