@@ -97,7 +97,6 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
 
   const resumeSessionHandler = (request, h) => {
     const sessionToken = request.params.token;
-    console.log('sessionToken1', sessionToken)
 
     return new Promise((resolve, reject) => {
       try {
@@ -170,7 +169,7 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
 
   const addLessonHandler = (request, h) => {
     const data = JSON.parse(request.payload);
-    const user = data.currentPupil;
+    const user = data.pupil;
     const lesson = data.event;
 
     return new Promise((resolve, reject) => {
@@ -217,7 +216,6 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
   }
 
   const init = async () => {
-    console.log('Версия 3')
     const server = Hapi.server({
       port: process.env.PORT || 3000,
       host: '0.0.0.0',

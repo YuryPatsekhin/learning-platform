@@ -8,4 +8,4 @@ export const UPDATE_LESSONS = 'UPDATE_LESSONS';
 
 export const SET_USER = 'SET_USER';
 export const SET_THEACHER = 'SET_THEACHER';
-export const SET_CURRENT_PUPIL = 'SET_CURRENT_PUPIL';
+export const SET_PUPIL_FOR_SCHEDULE = 'SET_PUPIL_FOR_SCHEDULE';

@@ -31,7 +31,7 @@ export const setTheacher = (theacher) => ({
   payload: theacher,
 });
 
-export const setCurrentPupil = (pupil) => ({
-  type: CONSTANTS.SET_CURRENT_PUPIL,
+export const setPupilForSchedule = (pupil) => ({
+  type: CONSTANTS.SET_PUPIL_FOR_SCHEDULE,
   payload: pupil,
 });

@@ -5,9 +5,12 @@ const initialState = {
   isLoginDialogOpen: false,
   isRegistrationDialogOpen: false,
   lessons: [],
-  user: null,
+  user: '',
   theacher: '',
-  currentPupil: '',
+  lessons: {
+    schedules: [],
+    currentPupil: '',
+  }
 };
 
 const store = createStore(

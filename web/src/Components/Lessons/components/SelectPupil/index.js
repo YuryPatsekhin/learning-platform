@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import { setCurrentPupil } from '~/Redux/Actions'
+import { setPupilForSchedule } from '~/Redux/Actions'
 import './styles.css';
 
 export const SelectPupil = () => {
@@ -18,7 +18,7 @@ export const SelectPupil = () => {
 
   const handleChange = (event) => {
     setPupil(event.target.value);
-    dispatch(setCurrentPupil(event.target.value));
+    dispatch(setPupilForSchedule(event.target.value));
   };
 
   return (

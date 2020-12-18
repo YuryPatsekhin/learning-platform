@@ -17,29 +17,30 @@ export const Schedule = () => {
   const [selectedLesson, setSelectedLesson] = useState({});
   const dispatch = useDispatch();
 
-  const currentPupil = useSelector(state => state.currentPupil);
+  const pupil = useSelector(state => state.lessons.currentPupil);
+
   const lessons = useSelector(state => {
-    const user = state.lessons.find(el => el.pupil === currentPupil);
-    return user && user.lessons;
-  })
+    const schedule = state.lessons.schedules.find(schedule => schedule.pupil === pupil);
+    return schedule && schedule.lessons;
+  });
 
   useEffect(() => {
-    if (currentPupil) {
+    if (pupil) {
       if (lessons) {
         initCalendar(lessons);
       } else {
-        api.getLessons(currentPupil).then(answer => {
+        api.getLessons(pupil).then(answer => {
           if (answer && answer.lessons) {
             const lessons = answer.lessons;
-            dispatch(updateLessons({ currentPupil, lessons }));
+            dispatch(updateLessons({ pupil, lessons }));
             initCalendar(lessons);
           } else {
-            initCalendar([])
+            initCalendar([]);
           }
         })
       }
     }
-  }, [currentPupil, lessons]);
+  }, [pupil, lessons]);
 
 
   const eventClick = (info) => {
@@ -58,19 +59,20 @@ export const Schedule = () => {
       title: lessonInfo.theme,
       url: lessonInfo.material,
       start: selectedDate,
-      test: 'test'
     };
+
     const lesson = {
       event,
-      currentPupil
-    }
+      pupil
+    };
+
     api.addLesson(lesson).then(answer => {
       if (answer && answer.lessons) {
         const lessons = answer.lessons;
-        dispatch(updateLessons({ currentPupil, lessons }));
+        dispatch(updateLessons({ pupil, lessons }));
         calendar.addEvent(event);
-      }
-    })
+      };
+    });
   };
 
   const openLessonInfo = () => {
@@ -108,7 +110,7 @@ export const Schedule = () => {
   };
 
   return (
-    currentPupil &&
+    pupil &&
     <>
       <EditLessonInfo lesson={selectedLesson} open={editLessonInfoOpen} openLessonInfo={openLessonInfo} closeEditLessonInfo={closeEditLessonInfo} />
       <LessonInfo open={lessonInfoOpen} closeLessonInfo={closeLessonInfo} addLesson={addLesson} />
