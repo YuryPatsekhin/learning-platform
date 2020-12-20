@@ -1,0 +1,10 @@
+.titleWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.icon {
+  margin-top: 20px;
+  cursor: pointer;
+  margin-left: 5px;
+}

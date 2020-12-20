@@ -60,6 +60,25 @@ const rootReducer = (state, action) => {
       }
     }
 
+    case CONSTANTS.DELETE_LESSON: {
+      const { pupil, lessonId } = action.payload;
+      const newState = Object.assign({}, state);
+      const schedule = newState.lessons.schedules.find(schedule => schedule.pupil === pupil);
+
+      if (schedule) {
+        const lesson = schedule.lessons.find(el => el.id === lessonId);
+        const indexOfLesson = schedule.lessons.indexOf(lesson);
+        const newLessons = [...schedule.lessons];
+
+        newLessons.splice(indexOfLesson, 1);
+        schedule.lessons = newLessons;
+
+        return { ...newState };
+
+      }
+      return { ...newState };
+    }
+
     case CONSTANTS.SET_USER: {
       return { ...state, user: action.payload }
     }

@@ -7,6 +7,7 @@ import LessonInfo from './LessonInfo';
 import EditLessonInfo from './EditLessonInfo';
 import { useDispatch, useSelector } from "react-redux";
 import api from '~/Services/api';
+import { v4 as uuidv4 } from 'uuid';
 import './styles/schedule.css';
 
 export const Schedule = () => {
@@ -25,6 +26,7 @@ export const Schedule = () => {
   });
 
   useEffect(() => {
+    // console.log('lessons', lessons)  
     if (pupil) {
       if (lessons) {
         initCalendar(lessons);
@@ -42,16 +44,17 @@ export const Schedule = () => {
     }
   }, [pupil, lessons]);
 
-
   const eventClick = (info) => {
     info.jsEvent.preventDefault();
+
     const lesson = {
       theme: info.event.title,
       material: info.event.url,
-    }
+      id: info.event.id,
+    };
 
     setSelectedLesson(lesson);
-    openEditLessonInfo();
+    openLessonInfo();
   };
 
   const addLesson = (lessonInfo) => {
@@ -59,11 +62,15 @@ export const Schedule = () => {
       title: lessonInfo.theme,
       url: lessonInfo.material,
       start: selectedDate,
+      test: 'test',
     };
+
+    const id = uuidv4();
 
     const lesson = {
       event,
-      pupil
+      pupil,
+      id
     };
 
     api.addLesson(lesson).then(answer => {
@@ -93,7 +100,7 @@ export const Schedule = () => {
 
   const dateClick = (info) => {
     setSelectedDate(info.dateStr);
-    setLessonInfoOpen(true);
+    setEditLessonInfoOpen(true);
   };
 
   const initCalendar = (lessons) => {
@@ -112,8 +119,8 @@ export const Schedule = () => {
   return (
     pupil &&
     <>
-      <EditLessonInfo lesson={selectedLesson} open={editLessonInfoOpen} openLessonInfo={openLessonInfo} closeEditLessonInfo={closeEditLessonInfo} />
-      <LessonInfo open={lessonInfoOpen} closeLessonInfo={closeLessonInfo} addLesson={addLesson} />
+      <LessonInfo initCalendar={initCalendar} lesson={selectedLesson} open={lessonInfoOpen} openEditLessonInfo={openEditLessonInfo} closeLessonInfo={closeLessonInfo} />
+      <EditLessonInfo open={editLessonInfoOpen} closeEditLessonInfo={closeEditLessonInfo} addLesson={addLesson} />
       <div className='calendar' id='calendar'></div>
     </>
   );

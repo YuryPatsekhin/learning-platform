@@ -35,3 +35,8 @@ export const setPupilForSchedule = (pupil) => ({
   type: CONSTANTS.SET_PUPIL_FOR_SCHEDULE,
   payload: pupil,
 });
+
+export const deleteLesson = ({ pupil, lessonId }) => ({
+  type: CONSTANTS.DELETE_LESSON,
+  payload: { pupil, lessonId },
+})

@@ -1,0 +1,20 @@
+.classroomWrapper {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  margin-top: 100px;
+};
+
+.title {
+  margin: auto;
+};
+
+.paper {
+  margin: 'auto';
+  max-width: 200;
+  height: 500px;
+}
+
+.text {
+  font-size: 30px;
+}

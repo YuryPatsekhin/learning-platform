@@ -14,7 +14,6 @@ export const App = () => {
 
   const user = useSelector(state => state.user);
 
-  console.log(user)
   const isPupil = (user) => {
     return user.role === 'pupil';
   };
@@ -25,7 +24,7 @@ export const App = () => {
     } else {
       dispatch(setPupilForSchedule(""));
     }
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -47,10 +46,10 @@ export const App = () => {
           }
 
           dispatch(setUser(user));
-        }
+        };
       });
     };
-  })
+  }, []);
 
   return (
     <React.Fragment>
@@ -59,5 +58,5 @@ export const App = () => {
       <Login />
       <SignUp />
     </React.Fragment>
-  )
-}
+  );
+};

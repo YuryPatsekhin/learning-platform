@@ -35,6 +35,10 @@ const api = {
     body: JSON.stringify(data),
   }).then(data => data.json()),
 
+  deleteLesson: ({ pupil, lessonId }) => fetch(`${APIBaseUrl}/deleteLesson/${pupil}/${lessonId}`, {
+    method: 'DELETE',
+  }),
+
   getLessons: (user) => fetch(`${APIBaseUrl}/getLessons/${user}`, {
     method: 'GET',
   }).then(data => data.json()),

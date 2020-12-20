@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const ObjectId = require('mongodb').ObjectID;
 const MongoClient = require('mongodb').MongoClient;
 const { isSameSiteNoneCompatible } = require('should-send-same-site-none');
+const { required } = require('@hapi/joi');
 
 dotenv.config();
 
@@ -171,6 +172,7 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
     const data = JSON.parse(request.payload);
     const user = data.pupil;
     const lesson = data.event;
+    lesson.id = data.id;
 
     return new Promise((resolve, reject) => {
       try {
@@ -213,6 +215,25 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
         reject(error);
       }
     });
+  }
+
+  const deleteLessonHandler = (request, h) => {
+    const pupil = request.params.pupil;
+    const lessonId = request.params.lessonId;
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('users').update(
+          { _id: ObjectId(pupil) },
+          { $pull: { 'lessons': { id: lessonId } } }
+        ).then(() => {
+          resolve(h.response().code(200));
+        });
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        reject(error);
+      }
+    })
   }
 
   const init = async () => {
@@ -270,15 +291,10 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
     })
 
     server.route({
-      method: 'GET',
-      path: '/test',
-      handler: (request, h) => {
-        return new Promise((res, rej) => {
-          res(h.response("HELLO"))
-        })
-      },
-    });
-
+      method: 'DELETE',
+      path: '/deleteLesson/{pupil}/{lessonId}',
+      handler: (request, h) => deleteLessonHandler(request, h),
+    })
 
     await server.start();
     console.log('Server running on %s', server.info.uri);
