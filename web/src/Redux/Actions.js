@@ -40,3 +40,9 @@ export const deleteLesson = ({ pupil, lessonId }) => ({
   type: CONSTANTS.DELETE_LESSON,
   payload: { pupil, lessonId },
 })
+
+export const moveLesson = ({pupil, newDate, lessonId}) => ({
+  type: CONSTANTS.MOVE_LESSON,
+  payload: { pupil, newDate, lessonId },
+})
+

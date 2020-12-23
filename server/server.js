@@ -234,7 +234,28 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
         reject(error);
       }
     })
-  }
+  };
+
+  const moveLessonHandler = (request, h) => {
+    const { pupil, newDate, lessonId } = JSON.parse(request.payload);
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('users').updateOne(
+          {
+            _id: ObjectId(pupil),
+            "lessons.id": lessonId
+          },
+          { $set: { 'lessons.$.start': newDate } }
+        ).then((e) => {
+          resolve(h.response().code(200));
+        })
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        resolve(error);
+      }
+    })
+  };
 
   const init = async () => {
     const server = Hapi.server({
@@ -295,6 +316,12 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
       path: '/deleteLesson/{pupil}/{lessonId}',
       handler: (request, h) => deleteLessonHandler(request, h),
     })
+
+    server.route({
+      method: 'POST',
+      path: '/moveLesson',
+      handler: (request, h) => moveLessonHandler(request, h),
+    });
 
     await server.start();
     console.log('Server running on %s', server.info.uri);

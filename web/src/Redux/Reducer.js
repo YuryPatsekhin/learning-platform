@@ -19,26 +19,6 @@ const rootReducer = (state, action) => {
       return { ...state, isRegistrationDialogOpen: false }
     }
 
-    case CONSTANTS.UPDATE_LESSONS1: {
-      const { pupil, lessons } = action.payload;
-      const user = state.schedule.find(user => user.pupil === pupil);
-      const newState = Object.assign({}, state);
-
-      if (user) {
-        user.lessons = lessons
-        newState.less
-        return { ...state };
-      } else {
-        const lessonsOfNewPupil = {
-          pupil,
-          lessons,
-        }
-        newState.schedule.push(lessonsOfNewPupil);
-
-        return { ...newState }
-      }
-    }
-
     case CONSTANTS.UPDATE_LESSONS: {
       const { pupil, lessons } = action.payload;
 
@@ -79,24 +59,35 @@ const rootReducer = (state, action) => {
       return { ...newState };
     }
 
+    case CONSTANTS.MOVE_LESSON: {
+      const { pupil, newDate, lessonId } = action.payload;
+      const newState = Object.assign({}, state);
+      const schedule = newState.lessons.schedules.find(schedule => schedule.pupil === pupil);
+      const lesson = schedule.lessons.find(lesson => lesson.id === lessonId);
+
+      lesson.start = newDate;
+
+      return { ...newState };
+    }
+
     case CONSTANTS.SET_USER: {
-      return { ...state, user: action.payload }
+      return { ...state, user: action.payload };
     }
 
     case CONSTANTS.SET_THEACHER: {
-      return { ...state, theacher: action.payload }
+      return { ...state, theacher: action.payload };
     }
 
     case CONSTANTS.SET_PUPIL_FOR_SCHEDULE: {
       const newState = Object.assign({}, state);
       newState.lessons.currentPupil = action.payload;
 
-      return { ...newState }
+      return { ...newState };
     }
 
     default:
       return state;
-  }
-}
+  };
+};
 
 export default rootReducer;

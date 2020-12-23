@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { updateLessons } from '~Redux/Actions'
+import { updateLessons, moveLesson } from '~Redux/Actions'
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -26,7 +26,6 @@ export const Schedule = () => {
   });
 
   useEffect(() => {
-    // console.log('lessons', lessons)  
     if (pupil) {
       if (lessons) {
         initCalendar(lessons);
@@ -62,7 +61,7 @@ export const Schedule = () => {
       title: lessonInfo.theme,
       url: lessonInfo.material,
       start: selectedDate,
-      test: 'test',
+      editable: true,
     };
 
     const id = uuidv4();
@@ -103,12 +102,24 @@ export const Schedule = () => {
     setEditLessonInfoOpen(true);
   };
 
+  const eventDrop = (info) => {
+    const data = {
+      pupil,
+      newDate: info.event.startStr,
+      lessonId: info.event.id
+    };
+
+    api.moveLesson(data);
+    dispatch(moveLesson(data));
+  }
+
   const initCalendar = (lessons) => {
     const calendarEl = document.getElementById('calendar');
     const calendar = new Calendar(calendarEl, {
       plugins: [interactionPlugin, dayGridPlugin],
       dateClick,
       eventClick,
+      eventDrop,
       events: lessons,
     });
 
