@@ -51,17 +51,10 @@ const styles = {
 };
 
 class Login extends React.Component {
-
   state = {
     login: '',
     password: '',
     rememberMe: false,
-  }
-
-  handleCancel = () => {
-    const { closeLoginDialog } = this.props;
-
-    closeLoginDialog();
   }
 
   onLoginChange = (e) => {
@@ -112,15 +105,22 @@ class Login extends React.Component {
     })
   }
 
+  onSignUpClick = () => {
+    const { openRegistrationDialog, closeLoginDialog } = this.props;
+
+    openRegistrationDialog();
+    closeLoginDialog();
+  }
+
   render() {
     const { isLoginDialogOpen, classes } = this.props;
     const { error, rememberMe } = this.state;
 
     return (
-      <Dialog onClose={this.handleCancel} open={isLoginDialogOpen}>
+      <Dialog open={isLoginDialogOpen}>
         <DialogTitle className={classes.dialogTitle}>Login</DialogTitle>
         <DialogContent className={classes.contentWrapper}>
-          <DialogContentText className={classes.dialogText}>Please sign in to your account or <span onClick={this.onSignUpClick} className={classes.registerLink}>sign up</span></DialogContentText>
+          <DialogContentText className={classes.dialogText}>Please login to your account or <span onClick={this.onSignUpClick} className={classes.registerLink}>sign up</span></DialogContentText>
           <div className={classes.fieldsWrapper}>
             <TextField onChange={this.onLoginChange} className={classes.fields} id="standard-basic" label="Login" />
             <TextField onChange={this.onPasswordChange} className={classes.fields} id="standard-basic" label="Password" />
@@ -139,9 +139,6 @@ class Login extends React.Component {
           </div>
         </DialogContent>
         <DialogActions className={classes.buttons}>
-          <Button onClick={this.handleCancel} color="primary">
-            Cancel
-          </Button>
           <Button onClick={this.handleLogin} color="primary">
             Log in
           </Button>

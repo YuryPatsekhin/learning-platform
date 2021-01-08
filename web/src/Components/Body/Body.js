@@ -1,6 +1,6 @@
 import React from 'react';
 import Menu from '../Menu'
-import Content from '../Content';
+import { Content } from '../Content';
 
 export default class Body extends React.Component {
 

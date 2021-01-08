@@ -257,6 +257,119 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
     })
   };
 
+  const addTopicHandler = (request, h) => {
+    const { pupil, theme } = JSON.parse(request.payload);
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('topics').find({ pupil }).toArray((err, result) => {
+          if (result.length !== 0) {
+            db.collection('topics').updateOne({ pupil }, { $push: { themes: theme } }).then(obj => {
+              if (obj.matchedCount > 0) {
+                resolve(h.response(JSON.stringify({ theme })).code(201));
+              }
+            });
+          } else {
+            const newUserTopics = {
+              pupil,
+              themes: [theme],
+            };
+
+            db.collection('topics').insertOne(newUserTopics, (err, response) => {
+              if (response.ops.length !== 0) {
+                resolve(h.response(JSON.stringify({ theme })).code(201));
+              } else {
+                const error = Boom.badRequest(e);
+                reject(error);
+              }
+            })
+          }
+        })
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        resolve(error);
+      }
+    })
+  };
+
+  const getTopicsHandler = (request, h) => {
+    const pupil = request.params.pupil;
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('topics').find({ pupil }).toArray((err, result) => {
+          if (result.length !== 0) {
+            resolve(h.response(JSON.stringify({ themes: result[0].themes })).code(200));
+          } else {
+            resolve(h.response(JSON.stringify({
+              message: 'topics not found'
+            })
+            ).code(200));
+          }
+        });
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        reject(error);
+      }
+    });
+  }
+
+  const addWordHandler = (request, h) => {
+    const { pupil, theme, word, translate } = JSON.parse(request.payload);
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('words').find({ pupil, theme }).toArray((err, result) => {
+          if (result.length !== 0) {
+            db.collection('words').updateOne({ pupil, theme }, { $push: { words: { word, translate } } }).then(obj => {
+              if (obj.matchedCount > 0) {
+                resolve(h.response(JSON.stringify({ words: [{ word, translate } ]})).code(201));
+              }
+            });
+          } else {
+            const newUserWords = {
+              pupil,
+              theme,
+              words: [{ word, translate }],
+            };
+            db.collection('words').insertOne(newUserWords, (err, response) => {
+              if (response.ops.length !== 0) {
+                resolve(h.response(JSON.stringify({ words: [{ word, translate }] })).code(201));
+              } else {
+                const error = Boom.badRequest(e);
+                reject(error);
+              }
+            })
+          }
+        })
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        reject(error);
+      }
+    })
+  }
+
+  const getWordsHandler = (request, h) => {
+    const { pupil, theme } = request.params;
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('words').find({ pupil, theme }).toArray((err, result) => {
+          if (result.length !== 0) {
+            resolve(h.response(JSON.stringify({ words: result[0].words })).code(200));
+          } else {
+            resolve(h.response(JSON.stringify({
+              message: 'words not found'
+            })
+            ).code(200));
+          }
+        });
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        reject(error);
+      }
+    });
+  }
   const init = async () => {
     const server = Hapi.server({
       port: process.env.PORT || 3000,
@@ -321,6 +434,30 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
       method: 'POST',
       path: '/moveLesson',
       handler: (request, h) => moveLessonHandler(request, h),
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/addTopic',
+      handler: (request, h) => addTopicHandler(request, h),
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/addWord',
+      handler: (request, h) => addWordHandler(request, h),
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/getTopics/{pupil}',
+      handler: (request, h) => getTopicsHandler(request, h),
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/getWords/{pupil}/{theme}',
+      handler: (request, h) => getWordsHandler(request, h),
     });
 
     await server.start();

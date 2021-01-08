@@ -19,6 +19,8 @@ export const Schedule = () => {
   const dispatch = useDispatch();
 
   const pupil = useSelector(state => state.lessons.currentPupil);
+  const userRole = useSelector(state => { return state.user && state.user.role });
+  const isUserPupil = userRole === 'pupil';
 
   const lessons = useSelector(state => {
     const schedule = state.lessons.schedules.find(schedule => schedule.pupil === pupil);
@@ -98,19 +100,26 @@ export const Schedule = () => {
   };
 
   const dateClick = (info) => {
-    setSelectedDate(info.dateStr);
-    setEditLessonInfoOpen(true);
+    if (!isUserPupil) {
+      setSelectedDate(info.dateStr);
+      setEditLessonInfoOpen(true);
+    };
   };
 
   const eventDrop = (info) => {
-    const data = {
-      pupil,
-      newDate: info.event.startStr,
-      lessonId: info.event.id
-    };
+    if (isUserPupil) {
+      alert("You can't move lessons");
+      initCalendar(lessons)
+    } else {
+      const data = {
+        pupil,
+        newDate: info.event.startStr,
+        lessonId: info.event.id
+      };
 
-    api.moveLesson(data);
-    dispatch(moveLesson(data));
+      api.moveLesson(data);
+      dispatch(moveLesson(data));
+    }
   }
 
   const initCalendar = (lessons) => {

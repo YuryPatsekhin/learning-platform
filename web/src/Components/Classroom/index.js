@@ -1,14 +1,10 @@
 import React from 'react';
 import { useSelector } from "react-redux";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import './classroom.css';
 
 export const Classroom = () => {
   const user = useSelector(state => state.user);
   const pupils = user.pupils;
-  console.log(pupils);
   const theacherUuid = user ? user._id : null;
   const invitationLink = `${window.location.origin}/?theacher=${theacherUuid}`
 

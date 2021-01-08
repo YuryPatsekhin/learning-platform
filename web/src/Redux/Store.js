@@ -7,6 +7,7 @@ const initialState = {
   lessons: [],
   user: '',
   theacher: '',
+  topics: [],
   lessons: {
     schedules: [],
     currentPupil: '',
@@ -20,3 +21,12 @@ const store = createStore(
 );
 
 export default store;
+
+
+[
+  {
+    pupil: '',
+    themes: ['', ''],
+    
+  }
+]

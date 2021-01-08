@@ -41,8 +41,17 @@ export const deleteLesson = ({ pupil, lessonId }) => ({
   payload: { pupil, lessonId },
 })
 
-export const moveLesson = ({pupil, newDate, lessonId}) => ({
+export const moveLesson = ({ pupil, newDate, lessonId }) => ({
   type: CONSTANTS.MOVE_LESSON,
   payload: { pupil, newDate, lessonId },
 })
 
+export const addTopics = ({ pupil, themes }) => ({
+  type: CONSTANTS.ADD_TOPICS,
+  payload: { pupil, themes },
+})
+
+export const addWords = ({ pupil, topic, words }) => ({
+  type: CONSTANTS.ADD_WORDS,
+  payload: { pupil, topic, words },
+})

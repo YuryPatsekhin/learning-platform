@@ -18,16 +18,11 @@ import './styles/lessonInfo.css';
 const LessonInfo = props => {
   const dispatch = useDispatch();
 
-  const { open, closeLessonInfo, initCalendar, lesson } = props;
+  const { open, closeLessonInfo, lesson } = props;
 
   const pupil = useSelector(state => state.lessons.currentPupil);
-
-  const handleEdit = () => {
-    const { openEditLessonInfo } = props;
-    closeLessonInfo();
-    openEditLessonInfo('');
-  };
-
+  const userRole = useSelector(state => { return state.user && state.user.role });
+  const isUserTeacher = userRole === 'teacher';
 
   const onDeleteClick = () => {
     api.deleteLesson({ pupil, lessonId: lesson.id }).then(answer => {
@@ -40,8 +35,7 @@ const LessonInfo = props => {
     <Dialog open={open} onClose={closeLessonInfo} aria-labelledby="form-dialog-title">
       <div className='titleWrapper'>
         <DialogTitle id="form-dialog-title">Lesson info</DialogTitle>
-        <DeleteIcon className='icon' onClick={onDeleteClick} />
-        <EditIcon className='icon' onClick={handleEdit} />
+        {isUserTeacher && <DeleteIcon className='icon' onClick={onDeleteClick} />}
         <CloseIcon className='icon' onClick={closeLessonInfo} />
       </div>
       <DialogContent>

@@ -47,6 +47,24 @@ const api = {
   getLessons: (user) => fetch(`${APIBaseUrl}/getLessons/${user}`, {
     method: 'GET',
   }).then(data => data.json()),
+
+  addTopic: (data) => fetch(`${APIBaseUrl}/addTopic`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then(data => data.json()),
+
+  getTopics: (pupil) => fetch(`${APIBaseUrl}/getTopics/${pupil}`, {
+    method: 'GET',
+  }).then(data => data.json()),
+
+  getWords: ({ pupil, topic }) => fetch(`${APIBaseUrl}/getWords/${pupil}/${topic}`, {
+    method: 'GET',
+  }).then(data => data.json()),
+
+  addWord: (data) => fetch(`${APIBaseUrl}/addWord`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then(data => data.json()),
 }
 
 export default api;

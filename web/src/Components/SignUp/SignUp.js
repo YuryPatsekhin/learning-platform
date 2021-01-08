@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { closeRegistrationDialog, setUser } from '~Redux/Actions'
+import { closeRegistrationDialog, setUser, openLoginDialog } from '~Redux/Actions'
 import { withStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -61,9 +61,6 @@ const SignUp = props => {
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const dispatch = useDispatch();
-  const handleCancel = () => {
-    dispatch(closeRegistrationDialog());
-  }
 
   const onLogInClick = () => {
     dispatch(openLoginDialog());
@@ -116,7 +113,7 @@ const SignUp = props => {
   };
 
   return (
-    <Dialog onClose={handleCancel} open={isDialogOpen}>
+    <Dialog open={isDialogOpen}>
       <DialogTitle className={classes.dialogTitle}>Sign up</DialogTitle>
       <DialogContent className={classes.contentWrapper}>
         <DialogContentText className={classes.dialogText}>Please fill in all fields to complete registration or <span className={classes.loginLink} onClick={onLogInClick}>log in</span></DialogContentText>
@@ -141,9 +138,6 @@ const SignUp = props => {
         </div>
       </DialogContent>
       <DialogActions className={classes.buttons}>
-        <Button onClick={handleCancel} color="primary">
-          Cancel
-        </Button>
         <Button onClick={onSignUpClick} color="primary">
           Sign up
         </Button>

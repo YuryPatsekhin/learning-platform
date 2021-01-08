@@ -85,6 +85,59 @@ const rootReducer = (state, action) => {
       return { ...newState };
     }
 
+    case CONSTANTS.ADD_TOPICS: {
+      const { pupil, themes } = action.payload;
+      const newState = Object.assign({}, state);
+      const topicsOfUsers = newState.topics.find(topic => topic.pupil === pupil);
+
+      if (topicsOfUsers) {
+        const index = newState.topics.indexOf(topicsOfUsers);
+        const newtopicsOfUsers = Object.assign({}, topicsOfUsers);
+
+        newtopicsOfUsers.themes.push(...themes);
+        newState.topics.splice(index, 1, newtopicsOfUsers);
+
+        return { ...newState };
+      } else {
+        const newTopicsList = {
+          pupil,
+          themes: [...themes],
+          words: []
+        }
+        newState.topics.push(newTopicsList);
+
+        return { ...newState };
+      };
+    }
+
+    case CONSTANTS.ADD_WORDS: {
+      const { pupil, topic, words } = action.payload;
+      const newState = Object.assign({}, state);
+      const topicsOfUsers = newState.topics.find(topic => topic.pupil === pupil);
+      const wordsOfTopic = topicsOfUsers && topicsOfUsers.words.find(words => words.topic === topic);
+
+      if (wordsOfTopic) {
+        const index = topicsOfUsers.words.indexOf(wordsOfTopic);
+        const newtWordsOfTopic = Object.assign({}, wordsOfTopic);
+
+        newtWordsOfTopic.words.push(...words);
+        topicsOfUsers.words.splice(index, 1, newtWordsOfTopic);
+      } else {
+        const index = newState.topics.indexOf(topicsOfUsers);
+        const newTopicsOfUsers = Object.assign({}, topicsOfUsers);
+        const newtWordsOfTopic = {
+          topic,
+          words
+        }
+
+        newTopicsOfUsers.words.push(newtWordsOfTopic);
+        newState.topics.splice(index, 1, newTopicsOfUsers)
+      };
+
+      return { ...newState };
+
+    }
+
     default:
       return state;
   };

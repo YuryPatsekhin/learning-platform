@@ -5,7 +5,7 @@ import Header from "./Components/Header";
 import Login from "./Components/Login";
 import SignUp from "./Components/SignUp";
 import { useDispatch } from "react-redux";
-import { setTheacher, setUser, setPupilForSchedule } from '~Redux/Actions';
+import { setTheacher, setUser, setPupilForSchedule, openLoginDialog, closeLoginDialog } from '~Redux/Actions';
 import { getCookie } from "~utils/CookieByName";
 import api from '~/Services/api';
 
@@ -46,10 +46,18 @@ export const App = () => {
           }
 
           dispatch(setUser(user));
-        };
+        }
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(openLoginDialog());
+    } else {
+      dispatch(closeLoginDialog());
+    }
+  }, [user]);
 
   return (
     <React.Fragment>

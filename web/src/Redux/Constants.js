@@ -11,3 +11,6 @@ export const MOVE_LESSON = 'MOVE_LESSON';
 export const SET_USER = 'SET_USER';
 export const SET_THEACHER = 'SET_THEACHER';
 export const SET_PUPIL_FOR_SCHEDULE = 'SET_PUPIL_FOR_SCHEDULE';
+
+export const ADD_TOPICS = 'ADD_TOPICS';
+export const ADD_WORDS = 'ADD_WORDS';
