@@ -14,10 +14,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import api from '~/Services/api';
-import { addWords } from '~Redux/Actions';
+import { addWords, deleteWord } from '~Redux/Actions';
 import './vocabulary.css';
 
-export const Topic = ({ theme, topicsOfUsers }) => {
+export const Topic = ({ theme, topicsOfUsers, isTeacher }) => {
   const dispatch = useDispatch();
 
   const [word, setWord] = useState('');
@@ -68,6 +68,15 @@ export const Topic = ({ theme, topicsOfUsers }) => {
     }
   };
 
+  const onDelete = (word) => {
+    api.deleteWord({ pupil, theme, word }).then(answer => {
+      if (answer.word) {
+        const { word } = answer;
+        dispatch(deleteWord({ word, theme, pupil }));
+      }
+    });
+  }
+
   return (
     <Accordion onChange={onOpen}>
       <AccordionSummary
@@ -84,30 +93,35 @@ export const Topic = ({ theme, topicsOfUsers }) => {
               <TableRow>
                 <TableCell>Words</TableCell>
                 <TableCell align="right">Translate</TableCell>
-                <TableCell align="right"></TableCell>
+                {!isTeacher && <TableCell align="right"></TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
               {words && words.map((word, index) => (
                 <TableRow key={word.word + index}>
-                  <TableCell component="th" scope="row">
+                  <TableCell style={{ wordWrap: 'break-word', maxWidth: 150 }} component="th" scope="row">
                     {word.word}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell style={{ wordWrap: 'break-word', maxWidth: 150 }} align="right">
                     {word.translate}
                   </TableCell>
-                  <TableCell align="right"><DeleteIcon /></TableCell>
+                  {!isTeacher && <TableCell style={{ cursor: 'pointer', fontSize: 40 }} align="right"><DeleteIcon onClick={() => onDelete(word)} /></TableCell>}
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          <div className='buttons'>
-            <TextField value={word} onChange={onWordChange} id="outlined-basic" label="Word" variant="outlined" />
-            <TextField value={translate} onChange={onTranslateChange} style={{ marginLeft: 15 }} id="outlined-basic" label="Translate" variant="outlined" />
-          </div>
-          <Button onClick={onAddClick} style={{ marginTop: 15 }} variant="contained" color="primary">
-            Add
-          </Button>
+          {!isTeacher && (
+            <>
+              <div className='buttons'>
+                <TextField value={word} onChange={onWordChange} id="outlined-basic" label="Word" variant="outlined" />
+                <TextField value={translate} onChange={onTranslateChange} style={{ marginLeft: 15 }} id="outlined-basic" label="Translate" variant="outlined" />
+              </div>
+              <Button onClick={onAddClick} style={{ marginTop: 15 }} variant="contained" color="primary">
+                Add
+              </Button>
+            </>
+          )}
+
         </div>
       </AccordionDetails>
     </Accordion>

@@ -14,3 +14,5 @@ export const SET_PUPIL_FOR_SCHEDULE = 'SET_PUPIL_FOR_SCHEDULE';
 
 export const ADD_TOPICS = 'ADD_TOPICS';
 export const ADD_WORDS = 'ADD_WORDS';
+
+export const DELETE_WORD = 'DELETE_WORD';

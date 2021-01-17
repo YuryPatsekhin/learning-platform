@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import { useSelector } from "react-redux";
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import { setPupilForSchedule } from '~/Redux/Actions'
-import './styles.css';
+import './vocabulary.css';
 
-export const SelectPupil = () => {
+export const SelectPupil = ({ pupil, setPupil }) => {
 
-  const dispatch = useDispatch();
   const pupils = useSelector(state => state.user && state.user.pupils);
-  const [pupil, setPupil] = useState('');
 
   const handleChange = (event) => {
     setPupil(event.target.value);
-    dispatch(setPupilForSchedule(event.target.value));
   };
 
   return (

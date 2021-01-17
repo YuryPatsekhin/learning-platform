@@ -55,3 +55,8 @@ export const addWords = ({ pupil, topic, words }) => ({
   type: CONSTANTS.ADD_WORDS,
   payload: { pupil, topic, words },
 })
+
+export const deleteWord = ({ word, theme, pupil }) => ({
+  type: CONSTANTS.DELETE_WORD,
+  payload: { word, theme, pupil },
+})

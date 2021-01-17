@@ -138,6 +138,24 @@ const rootReducer = (state, action) => {
 
     }
 
+    case CONSTANTS.DELETE_WORD: {
+      const { word, theme, pupil } = action.payload;
+      const newState = Object.assign({}, state);
+
+      const currentPupilTopics = newState.topics.find(topic => topic.pupil === pupil);
+      const indexOfCurrentPupilTopics = newState.topics.indexOf(currentPupilTopics);
+      const newCurrentPupilTopics = Object.assign({}, currentPupilTopics);
+
+      const currentTopic = newCurrentPupilTopics.words.find(topic => topic.topic === theme);
+      const currentWord = currentTopic.words.find(topicWord => topicWord.word === word.word);
+
+      const indexOfCurrentWord = currentTopic.words.indexOf(currentWord);
+      currentTopic.words.splice(indexOfCurrentWord, 1);
+      newState.topics.splice(indexOfCurrentPupilTopics, 1, newCurrentPupilTopics);
+
+      return { ...newState };
+    }
+
     default:
       return state;
   };

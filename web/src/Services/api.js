@@ -65,6 +65,11 @@ const api = {
     method: 'POST',
     body: JSON.stringify(data),
   }).then(data => data.json()),
+
+  deleteWord: (data) => fetch(`${APIBaseUrl}/deleteWord`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then(data => data.json()),
 }
 
 export default api;

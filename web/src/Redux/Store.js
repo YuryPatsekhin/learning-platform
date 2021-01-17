@@ -21,12 +21,3 @@ const store = createStore(
 );
 
 export default store;
-
-
-[
-  {
-    pupil: '',
-    themes: ['', ''],
-    
-  }
-]

@@ -12,6 +12,8 @@
 .table {
   flex-direction: column;
   margin: auto;
+  margin: 0;
+  width: 100%;
 }
 
 .buttons {
@@ -20,4 +22,17 @@
 
 .button {
   margin-right: 10px;
+}
+
+.selectWrapper {
+  display: flex;
+  justify-content: center;
+  color: red;
+  width: 80%;
+  margin: auto;
+  margin-top: 100px;
+}
+
+.select {
+  width: 200px;
 }

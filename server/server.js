@@ -369,7 +369,28 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
         reject(error);
       }
     });
-  }
+  };
+
+  const deleteWordHandler =(request, h) => {
+    const { pupil, theme, word } =  JSON.parse(request.payload);
+
+    console.log(pupil, theme, word);
+
+    return new Promise((resolve, reject) => {
+      try {
+        db.collection('words').update(
+          { pupil, theme },
+          { $pull: { 'words': { word: word.word, translate: word.translate } } }
+        ).then(() => {
+          resolve(h.response(JSON.stringify({ word: {word: word.word, translate: word.translate} })).code(200));
+        });
+      } catch (e) {
+        const error = Boom.badRequest(e);
+        reject(error);
+      }
+    });
+  };
+
   const init = async () => {
     const server = Hapi.server({
       port: process.env.PORT || 3000,
@@ -458,6 +479,12 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
       method: 'GET',
       path: '/getWords/{pupil}/{theme}',
       handler: (request, h) => getWordsHandler(request, h),
+    });
+
+    server.route({
+      method: 'POST',
+      path: '/deleteWord',
+      handler: (request, h) => deleteWordHandler(request, h),
     });
 
     await server.start();
