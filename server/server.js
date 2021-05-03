@@ -404,6 +404,12 @@ MongoClient.connect(connectUrl, { useUnifiedTopology: true }, (err, client) => {
     });
 
     server.route({
+      method: 'GET',
+      path: '/test',
+      handler: (request, h) => h.response(JSON.stringify({ test: 'test' }))
+    });
+
+    server.route({
       method: 'POST',
       path: '/validate',
       handler: (request, h) => validateHandler(request, h),
